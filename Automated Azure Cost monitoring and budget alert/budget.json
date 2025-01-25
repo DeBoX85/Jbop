@@ -1,0 +1,72 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "budgetName": {
+      "type": "string",
+      "metadata": {
+        "description": "Name of the budget."
+      }
+    },
+    "amount": {
+      "type": "float",
+      "metadata": {
+        "description": "The total amount of cost to track."
+      }
+    },
+    "timeGrain": {
+      "type": "string",
+      "allowedValues": [
+        "Monthly",
+        "Quarterly",
+        "Annually"
+      ],
+      "metadata": {
+        "description": "The time period for the budget."
+      }
+    },
+    "startDate": {
+      "type": "string",
+      "metadata": {
+        "description": "The start date for the budget in YYYY-MM-DD format."
+      }
+    },
+    "contactEmails": {
+      "type": "array",
+      "metadata": {
+        "description": "Email addresses to notify when budget thresholds are exceeded."
+      }
+    },
+    "alertThresholds": {
+      "type": "array",
+      "defaultValue": [80, 100],
+      "metadata": {
+        "description": "Percentage thresholds to trigger alerts."
+      }
+    }
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Consumption/budgets",
+      "apiVersion": "2019-10-01",
+      "name": "[parameters('budgetName')]",
+      "properties": {
+        "category": "Cost",
+        "amount": "[parameters('amount')]",
+        "timeGrain": "[parameters('timeGrain')]",
+        "timePeriod": {
+          "startDate": "[parameters('startDate')]",
+          "endDate": "[addYears(parameters('startDate'), 1)]"
+        },
+        "notifications": {
+          "alerts": {
+            "enabled": true,
+            "operator": "GreaterThan",
+            "threshold": "[parameters('alertThresholds')[0]]",
+            "contactEmails": "[parameters('contactEmails')]"
+          }
+        }
+      }
+    }
+  ]
+}
