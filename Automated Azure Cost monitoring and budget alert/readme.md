@@ -23,3 +23,9 @@ This project automates the creation of a budget in Azure Cost Management and pro
 4. Deploy the ARM template using the Azure CLI or PowerShell:
    ```bash
    az deployment group create --resource-group <ResourceGroupName> --template-file budget.json --parameters budget.parameters.json
+
+### 2. Monitor Spending with PowerShell Script
+1. Run the PowerShell script to retrieve current spending:
+   ```bash
+   .\Get-AzureSpending.ps1 -SubscriptionId <YourSubscriptionId>
+
