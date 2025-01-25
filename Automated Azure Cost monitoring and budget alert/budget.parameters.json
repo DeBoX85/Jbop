@@ -1,0 +1,26 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "budgetName": {
+      "value": "MonthlyBudget"
+    },
+    "amount": {
+      "value": 500.0
+    },
+    "timeGrain": {
+      "value": "Monthly"
+    },
+    "startDate": {
+      "value": "2025-01-01"
+    },
+    "contactEmails": {
+      "value": [
+        "admin@example.com"
+      ]
+    },
+    "alertThresholds": {
+      "value": [80, 100]
+    }
+  }
+}
