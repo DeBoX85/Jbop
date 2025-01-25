@@ -1,0 +1,90 @@
+{
+  "$schema": "https://raw.githubusercontent.com/Microsoft/Application-Insights-Workbooks/master/schema/workbook.json",
+  "version": "Notebook/1.0",
+  "metadata": {
+    "title": "Azure Cost Analysis Workbook",
+    "description": "Visualize and analyze Azure costs for better financial insights and optimization.",
+    "tags": ["Cost Management", "Azure Monitor", "Optimization"]
+  },
+  "items": [
+    {
+      "type": "textblock",
+      "content": "# Azure Cost Analysis and Optimization Workbook\nThis workbook provides insights into Azure costs, trends, and optimization opportunities."
+    },
+    {
+      "type": "query",
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "Usage | summarize TotalCost = sum(Quantity * UnitPrice) by bin(TimeGenerated, 1d), ResourceId | order by TotalCost desc",
+        "subscriptions": [
+          "your-actual-subscription-id"
+        ]
+      },
+      "name": "Daily Cost by Resource",
+      "chartSettings": {
+        "chartType": "line",
+        "xAxis": {
+          "name": "TimeGenerated",
+          "type": "timestamp"
+        },
+        "yAxis": {
+          "name": "TotalCost",
+          "type": "number"
+        }
+      }
+    },
+    {
+      "type": "query",
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "Usage | summarize TotalCost = sum(Quantity * UnitPrice) by ResourceGroup | order by TotalCost desc",
+        "subscriptions": [
+          "your-actual-subscription-id"
+        ]
+      },
+      "name": "Cost Breakdown by Resource Group",
+      "chartSettings": {
+        "chartType": "bar",
+        "xAxis": {
+          "name": "ResourceGroup",
+          "type": "string"
+        },
+        "yAxis": {
+          "name": "TotalCost",
+          "type": "number"
+        }
+      }
+    },
+    {
+      "type": "query",
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "Usage | summarize TotalCost = sum(Quantity * UnitPrice) by ServiceName | order by TotalCost desc",
+        "subscriptions": [
+          "your-actual-subscription-id"
+        ]
+      },
+      "name": "Cost Breakdown by Service",
+      "chartSettings": {
+        "chartType": "pie",
+        "legend": {
+          "position": "right"
+        }
+      }
+    },
+    {
+      "type": "query",
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "Usage | where Quantity > 0 | summarize UnusedResources = countif(Quantity < 1)",
+        "subscriptions": [
+          "your-actual-subscription-id"
+        ]
+      },
+      "name": "Unused Resources",
+      "chartSettings": {
+        "chartType": "table"
+      }
+    }
+  ]
+}
