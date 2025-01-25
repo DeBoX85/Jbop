@@ -1,0 +1,61 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "policyName": {
+      "type": "string",
+      "metadata": {
+        "description": "Name of the Azure Policy"
+      }
+    },
+    "allowedLocations": {
+      "type": "array",
+      "metadata": {
+        "description": "List of allowed Azure regions"
+      }
+    }
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Authorization/policyDefinitions",
+      "apiVersion": "2021-06-01",
+      "name": "[parameters('policyName')]",
+      "properties": {
+        "displayName": "[parameters('policyName')]",
+        "mode": "Indexed",
+        "policyRule": {
+          "if": {
+            "field": "location",
+            "notIn": "[parameters('allowedLocations')]"
+          },
+          "then": {
+            "effect": "Deny"
+          }
+        },
+        "parameters": {
+          "allowedLocations": {
+            "type": "Array",
+            "metadata": {
+              "description": "List of allowed Azure regions",
+              "displayName": "Allowed Locations"
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Authorization/policyAssignments",
+      "apiVersion": "2021-06-01",
+      "name": "[parameters('policyName')]",
+      "properties": {
+        "displayName": "[parameters('policyName')]",
+        "policyDefinitionId": "[resourceId('Microsoft.Authorization/policyDefinitions', parameters('policyName'))]",
+        "parameters": {
+          "allowedLocations": {
+            "value": "[parameters('allowedLocations')]"
+          }
+        }
+      }
+    }
+  ]
+}
